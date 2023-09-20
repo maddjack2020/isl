@@ -1,0 +1,18 @@
+Source: isl
+Section: unknown
+Priority: optional
+Maintainer: Jackson Hansen <madjack971@bsdmail.com>
+Build-Depends: debhelper-compat (= 13), dh-autoreconf
+Standards-Version: 4.5.1
+Homepage: http://isl.gforge.inria.fr/
+Rules-Requires-Root: no
+Vcs-Git: https://github.com/maddjack2020/isl.git
+Vcs-Browser: https://github.com/maddjack2020/isl
+
+Package: isl
+Architecture: any
+Multi-Arch: foreign
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: auto-generated package by debmake
+ ISL is a library for manipulating sets and relations of integer points bounded
+ by linear constraints.

@@ -1,0 +1,29 @@
+#!/usr/bin/make -f
+# You must remove unused comment lines for the released package.
+#export DH_VERBOSE = 1
+#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+%:
+	dh $@ --with autoreconf
+
+#override_dh_install:
+#	dh_install --list-missing -X.la -X.pyc -X.pyo
+
+SYSROOT = /opt/cross/x86_64-xgcc-linux-gnu/sys-root
+CPLUS_INCLUDE_PATH = $(SYSROOT)/usr/include/c++/12/x86_64-xgcc-linux-gnu
+export CPLUS_INCLUDE_PATH := $(SYSROOT)/usr/include/c++/12:$(CPLUS_INCLUDE_PATH)
+LIBRARY_PATH = $(SYSROOT)/lib/x86_64-linux-gnu
+export LIBRARY_PATH := $(SYSROOT)/usr/lib/x86_64-linux-gnu:$(LIBRARY_PATH)
+PATH := /opt/cross/bin:$(PATH)
+CONFARGS = --host=x86_64-xgcc-linux-gnu --with-sysroot=$(SYSROOT) --disable-static --with-gmp=system
+
+override_dh_auto_configure:
+	dh_auto_configure -- $(CONFARGS) LIBS=-lgmp
+
+execute_after_dh_auto_install:
+	find debian -name "*.la" -delete
+
+override_dh_shlibdeps:
+	dh_shlibdeps -- -l$(LIBRARY_PATH) --admindir=$(SYSROOT)/var/lib/dpkg --ignore-missing-info
